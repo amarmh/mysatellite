@@ -1,10 +1,16 @@
 <%#
-name: Satellite Kickstart default
-snippet: false
-model: ProvisioningTemplate
 kind: provision
+name: Satellite Kickstart default
 oses:
-- RedHat
+- CentOS 5
+- CentOS 6
+- CentOS 7
+- RedHat 5
+- RedHat 6
+- RedHat 7
+- Fedora 19
+- Fedora 20
+- Fedora 21 edited by Amar
 %>
 <%
   rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
@@ -29,7 +35,7 @@ skipx
 <% else -%>
 <% dhcp = !@static -%>
 <% end -%>
-
+#network configuration - line added for testing
 network --bootproto <%= dhcp ? 'dhcp' : "static --ip=#{@host.ip} --netmask=#{subnet.mask} --gateway=#{subnet.gateway} --nameserver=#{[subnet.dns_primary, subnet.dns_secondary].select{ |item| item.present? }.join(',')}" %> --hostname <%= @host %><%= os_major >= 6 ? " --device=#{@host.mac}" : '' -%>
 
 rootpw --iscrypted <%= root_pass %>
